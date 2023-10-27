@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:svt_tabla/showTabl.dart';
 
 void main() => runApp(const MyApp());
@@ -23,15 +24,11 @@ class MyHomePage extends StatelessWidget {
     'post 1',
     'post 2',
     'post 3',
-    'post 4',
     'post 5',
     'post 6',
     'post 7',
     'post 8',
     'post 9',
-    'post 10',
-    'post 12',
-    'post 13',
   ];
 
   @override
@@ -48,7 +45,9 @@ class MyHomePage extends StatelessWidget {
         body: ListView.builder(
             itemCount: _post.length,
             itemBuilder: (context, index) {
-              return showTabl();
+              return ShowTabl(
+                child: _post[index],
+              );
             }));
   }
 }
