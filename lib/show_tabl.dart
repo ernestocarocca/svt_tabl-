@@ -1,10 +1,11 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/tablaObject.dart';
 
 class ShowTabl extends StatelessWidget {
-  dynamic child;
-  final TablaObject timeTable;
-  ShowTabl({required this.timeTable, this.child});
+  final dynamic child;
+  final Tablaobject timeTable;
+  const ShowTabl({super.key, required this.timeTable, this.child});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,14 +19,19 @@ class ShowTabl extends StatelessWidget {
           children: [
             Text(
               'TimeTable Name: ${timeTable.timetableName} ',
-              style: TextStyle(color: Colors.amber),
+              style: const TextStyle(color: Colors.amber),
             ),
             Text(
               'Slogan: ${timeTable.slogan} ',
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
 
-            Image.network(timeTable.imageUrl) // Visa bilden här
+            Flexible(
+              child: Image.network(
+                timeTable.imageUrl,
+                fit: BoxFit.contain,
+              ),
+            ) // Visa bilden här
           ],
         )),
       ),

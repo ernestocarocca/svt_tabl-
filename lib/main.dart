@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:svt_tabla/showTabl.dart';
+import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
 
 void main() => runApp(const MyApp());
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (context, index) {
           var item = scheduleData[index];
           // Create a TablaObject from your data,
-          TablaObject tablaObject = TablaObject(item['program']['name'],
+          Tablaobject tablaObject = Tablaobject(item['program']['name'],
               item['description'], "date", false, item['imageurltemplate']);
           return ShowTabl(timeTable: tablaObject);
         },
