@@ -24,8 +24,7 @@ class ShowTabl extends StatelessWidget {
               'Slogan: ${timeTable.slogan} ',
               style: TextStyle(color: Colors.white),
             ),
-            Text('Date: ${timeTable.dateFormatter.format('yyyy-MM-dd')}'),
-            Text('On Live: ${timeTable.onLive ? 'Yes' : 'No'}'),
+
             timeTable.image, // Visa bilden här
           ],
         )),

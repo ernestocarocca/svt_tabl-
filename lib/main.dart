@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/showTabl.dart';
-import 'package:svt_tabla/tablaObject.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,27 +25,16 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> scheduleData = [];
-  final List<TablaObject> _post = [
-    TablaObject(
-      "p4",
-      "Senaste nyheterna varje timme från Ekot.",
-      DateTime.now(),
-      false,
-      Image.network(
-        'https://static-cdn.sr.se/images/3117/76f4b1be-4472-4571-b0c0-ba6a08ce1f8f.jpg?preset=2048x1152&format=webp',
-        cacheHeight: 100,
-      ),
-    ),
-  ];
 
   @override
   void initState() {
     super.initState();
+
     fetchData().then((data) {
       setState(() {
         scheduleData = data;
@@ -57,35 +45,43 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Svt Tablå"),
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            backgroundColor: Colors.purple,
-            fontSize: 20.0,
-          ),
-        ),
-        body: ListView.builder(
-            itemCount: scheduleData.length,
-            itemBuilder: (context, index) {
-              var item = scheduleData[index];
-              return ListTile(
-                title: Text(item['title']),
-                subtitle: Text(item['description']),
-                leading: item['imageurl'] != null
-                    ? Image.network(item['imageurl'])
-                    : const Icon(Icons
-                        .image_not_supported), // Visa ikon om ingen bild finns
-              );
-            }));
+      appBar: AppBar(
+        title: const Text('Svt Tablå'),
+      ),
+      body: ListView.builder(
+        itemCount: scheduleData.length,
+        itemBuilder: (context, index) {
+          var item = scheduleData[index];
+
+          return ListTile(
+              title: Text(item['title']),
+              leading: item['imageurltemplate'] != null
+                  ? Image.network(item['imageurltemplate'])
+                  : const Icon(Icons
+                      .image_not_supported), // Visa ikon om ingen bild finns
+
+              subtitle: Column(
+                children: [
+                  Text(item['description']),
+                  Text(item['program']['name']),
+                  Text("Starttid: ${item['starttimeutc']}"),
+                  Text("Sluttid: ${item['endtimeutc']}"),
+                ],
+              ));
+        },
+      ),
+    );
   }
 }
 
 Future<List<dynamic>> fetchData() async {
+  var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158&";
+  String date = "2017-09-25&";
+  String json = "format=json";
   final dio = Dio();
   try {
     final response = await dio.get(
-      'http://api.sr.se/api/v2/scheduledepisodes?channelid=164&format=json',
+      getFetchUrl + date + json,
     );
 
     if (response.statusCode == 200) {

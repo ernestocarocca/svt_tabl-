@@ -1,26 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 class TablaObject {
-  String timetableName = "P4";
-  DateTime myDateTime;
-  late DateFormatter dateFormatter;
-  String slogan = "Senaste nyheterna varje timme från Ekot.";
+  String timetableName;
+  String date;
+  String slogan;
   bool onLive = false;
-  Image image;
+  String imageUrl;
 
-  TablaObject(this.timetableName, this.slogan, this.myDateTime, this.onLive,
-      this.image) {
-    dateFormatter = DateFormatter(myDateTime);
-  }
-}
+  TablaObject(
+      this.timetableName, this.slogan, this.date, this.onLive, this.imageUrl) {}
 
-class DateFormatter {
-  DateTime myDateTime;
-
-  DateFormatter(this.myDateTime);
-
-  String format(String formatPattern) {
-    return DateFormat(formatPattern).format(myDateTime);
-  }
+  get image => null;
 }
