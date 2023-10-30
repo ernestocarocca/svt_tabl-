@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Heaven extends StatelessWidget {
   final String child;
-  Heaven({required this.child});
+  const Heaven({required this.child});
 
   @override
   Widget build(BuildContext context) {

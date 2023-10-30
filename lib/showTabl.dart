@@ -25,7 +25,7 @@ class ShowTabl extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
 
-            timeTable.image, // Visa bilden här
+            Image.network(timeTable.imageUrl) // Visa bilden här
           ],
         )),
       ),

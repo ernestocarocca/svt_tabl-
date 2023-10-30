@@ -6,7 +6,5 @@ class TablaObject {
   String imageUrl;
 
   TablaObject(
-      this.timetableName, this.slogan, this.date, this.onLive, this.imageUrl) {}
-
-  get image => null;
+      this.timetableName, this.slogan, this.date, this.onLive, this.imageUrl);
 }

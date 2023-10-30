@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/showTabl.dart';
+import 'package:svt_tabla/tablaObject.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'svt tablå',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
-      home: MyHomePage(
+      home: const MyHomePage(
         title: 'timetablet',
       ),
     );
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -52,22 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: scheduleData.length,
         itemBuilder: (context, index) {
           var item = scheduleData[index];
-
-          return ListTile(
-              title: Text(item['title']),
-              leading: item['imageurltemplate'] != null
-                  ? Image.network(item['imageurltemplate'])
-                  : const Icon(Icons
-                      .image_not_supported), // Visa ikon om ingen bild finns
-
-              subtitle: Column(
-                children: [
-                  Text(item['description']),
-                  Text(item['program']['name']),
-                  Text("Starttid: ${item['starttimeutc']}"),
-                  Text("Sluttid: ${item['endtimeutc']}"),
-                ],
-              ));
+          // Create a TablaObject from your data,
+          TablaObject tablaObject = TablaObject(item['program']['name'],
+              item['description'], "date", false, item['imageurltemplate']);
+          return ShowTabl(timeTable: tablaObject);
         },
       ),
     );
