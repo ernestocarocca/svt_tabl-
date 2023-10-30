@@ -3,7 +3,7 @@ class Tablaobject {
   String timetableName;
   String date;
   String slogan;
-  bool onLive = false;
+  bool? onLive;
   String imageUrl;
 
   Tablaobject(

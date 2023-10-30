@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
 import 'package:intl/intl.dart';
@@ -54,21 +55,28 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: scheduleData.length,
         itemBuilder: (context, index) {
           var item = scheduleData[index];
-          String apiDate = item['starttimeutc'];
-          //print(apiDate);
-          int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
+          dynamic apiDate = item['starttimeutc'];
+          dynamic formattedDate = formatApiDate(apiDate);
+          print(formattedDate);
 
-          print('Original timestamp: $timestamp');
-          DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-          print('Date from timestamp: $dateTime');
-          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
-          print('Date from timestamp: $dateTime');
+          //print(apiDate);
+          //  int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
+
+          //print('Original timestamp: $timestamp');
+          // DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+          //print('Date from timestamp: $dateTime');
+          // String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+          //print('Date from timestamp: $dateTime');
 
           // print(formattedDate);
           // Create a TablaObject from your data,
-          Tablaobject tablaObject = Tablaobject(item['program']['name'],
-              item['description'], "date", false, item['imageurltemplate']);
-          return ShowTabl(timeTable: tablaObject);
+          Tablaobject tablaObject = Tablaobject(
+              item['program']['name'],
+              item['description'],
+              item['starttimeutc'],
+              item[formattedDate],
+              item['imageurltemplate']);
+          return ShowTabl(timeTable: tablaObject, formattedDate: '',);
         },
       ),
     );
