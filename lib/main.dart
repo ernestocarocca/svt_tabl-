@@ -49,11 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    fetchData().then((data) {
+    /* fetchData().then((data) {
       setState(() {
         scheduleData = data;
       });
-    });
+    });*/
   }
 
   @override

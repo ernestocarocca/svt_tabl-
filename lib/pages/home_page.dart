@@ -38,6 +38,7 @@ class _MyHomePageState extends State<HomePage> {
       drawer: Drawer(),
       body: SafeArea(
         child: Stack(
+          // ignore: sort_child_properties_last
           children: [
             VxAnimatedBox()
                 .size(context.screenWidth, context.screenHeight)
@@ -57,24 +58,34 @@ class _MyHomePageState extends State<HomePage> {
             VxSwiper.builder(
               itemCount: scheduleData.length,
               aspectRatio: 1.0,
+              enlargeCenterPage: true,
               itemBuilder: (context, index) {
                 final item = scheduleData[index];
                 final imageUrl = item['imageurltemplate'];
+                final text = item['description'];
                 return VxBox(
-                  child: ZStack([
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
+                        child: ZStack([
+                  Align(
+                    alignment: Alignment.center,
+                    child: VStack([Text(text).text.sm.white.bold.make()]),
+                  )
+                ]))
+                    .bgImage(
+                      DecorationImage(
                           image: NetworkImage(imageUrl),
                           fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ]),
-                ).make();
+                          colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.4), BlendMode.darken)),
+                    )
+                    .border(color: Colors.black, width: 8.0)
+                    .withRounded(value: 60.0)
+                    .make()
+                    .p16()
+                    .centered();
               },
             ),
           ],
+          fit: StackFit.expand,
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
