@@ -6,7 +6,11 @@ class ShowTabl extends StatelessWidget {
   final String formattedDate;
   final dynamic child;
   final Tablaobject timeTable;
-  const ShowTabl({super.key, required this.timeTable, this.child, required this.formattedDate});
+  const ShowTabl(
+      {super.key,
+      required this.timeTable,
+      this.child,
+      required this.formattedDate});
   @override
   Widget build(BuildContext context) {
     return Container(

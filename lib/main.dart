@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/dateconverter.dart';
@@ -12,10 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'svt tablå',
-      theme: ThemeData(primarySwatch: Colors.blueGrey),
-      home: const MyHomePage(
+      home: MyHomePage(
         title: 'timetablet',
       ),
     );
@@ -48,36 +49,48 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Svt Tablå'),
-      ),
-      body: ListView.builder(
-        itemCount: scheduleData.length,
-        itemBuilder: (context, index) {
-          var item = scheduleData[index];
-          dynamic apiDate = item['starttimeutc'];
-          dynamic formattedDate = formatApiDate(apiDate);
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Image.network(
+            'https://static-cdn.sr.se/images/166/1cf8d86c-bcca-4b20-ab83-9b8a7e2e75f2.jpg?preset=2048x1152',
+            fit: BoxFit.cover, // Justera höjden efter ditt behov
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Image.network(
+                'https://static-cdn.sr.se/images/166/1cf8d86c-bcca-4b20-ab83-9b8a7e2e75f2.jpg?preset=2048x1152',
+                width: 45, // Justera bredden efter ditt behov
+                height: 45, // Justera höjden efter ditt behov
+              ),
+              label: 'Radio',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.holiday_village),
+              label: 'Camera',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Chats',
+            ),
+          ],
+        ),
+        body: ListView.builder(
+          itemCount: scheduleData.length,
+          itemBuilder: (context, index) {
+            var item = scheduleData[index];
+            dynamic apiDate = item['starttimeutc'];
+            dynamic formattedDate = formatApiDate(apiDate);
 
-          //print(apiDate);
-          //  int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
-
-          //print('Original timestamp: $timestamp');
-          // DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-          //print('Date from timestamp: $dateTime');
-          // String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
-          //print('Date from timestamp: $dateTime');
-
-          // print(formattedDate);
-          // Create a TablaObject from your data,
-          Tablaobject tablaObject = Tablaobject(item['program']['name'],
-              item['description'], formattedDate, item['imageurltemplate']);
-          return ShowTabl(
-            timeTable: tablaObject,
-            formattedDate: formattedDate,
-          );
-        },
-      ),
-    );
+            Tablaobject tablaObject = Tablaobject(item['program']['name'],
+                item['description'], formattedDate, item['imageurltemplate']);
+            return ShowTabl(
+              timeTable: tablaObject,
+              formattedDate: formattedDate,
+            );
+          },
+        ));
   }
 }
 
