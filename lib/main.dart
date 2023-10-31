@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(const MyApp());
 
@@ -53,10 +55,26 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: scheduleData.length,
         itemBuilder: (context, index) {
           var item = scheduleData[index];
+          dynamic apiDate = item['starttimeutc'];
+          dynamic formattedDate = formatApiDate(apiDate);
+
+          //print(apiDate);
+          //  int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
+
+          //print('Original timestamp: $timestamp');
+          // DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+          //print('Date from timestamp: $dateTime');
+          // String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+          //print('Date from timestamp: $dateTime');
+
+          // print(formattedDate);
           // Create a TablaObject from your data,
           Tablaobject tablaObject = Tablaobject(item['program']['name'],
-              item['description'], "date", false, item['imageurltemplate']);
-          return ShowTabl(timeTable: tablaObject);
+              item['description'], formattedDate, item['imageurltemplate']);
+          return ShowTabl(
+            timeTable: tablaObject,
+            formattedDate: formattedDate,
+          );
         },
       ),
     );
@@ -64,14 +82,12 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<List<dynamic>> fetchData() async {
-  var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158&";
-  String date = "2017-09-25&";
-  String json = "format=json";
+  var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
+  String date = "&date=2018-09-25";
+  String json = "&format=json";
   final dio = Dio();
   try {
-    final response = await dio.get(
-      getFetchUrl + date + json,
-    );
+    final response = await dio.get(getFetchUrl + date + json);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
