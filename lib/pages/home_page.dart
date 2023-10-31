@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
@@ -11,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-  List<dynamic> scheduleData = [];
+  List<dynamic> channelsData = [];
 
   // late List<MyRadio> radios;
   @override
@@ -19,9 +20,9 @@ class _MyHomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     // fetchRadios();
-    fetchData().then((data) {
+    fetchDataRadio().then((data) {
       setState(() {
-        scheduleData = data;
+        channelsData = data;
       });
     });
   }
@@ -56,13 +57,13 @@ class _MyHomePageState extends State<HomePage> {
               elevation: 0.0,
             ).h(100).p16(),
             VxSwiper.builder(
-              itemCount: scheduleData.length,
+              itemCount: channelsData.length,
               aspectRatio: 1.0,
               enlargeCenterPage: true,
               itemBuilder: (context, index) {
-                final item = scheduleData[index];
-                final imageUrl = item['imageurltemplate'];
-                final text = item['description'];
+                final item = channelsData[index];
+                final imageUrl = item['image'];
+                final text = item['name'];
                 return VxBox(
                         child: ZStack([
                   Align(
@@ -109,5 +110,25 @@ class _MyHomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+}
+
+Future<List<dynamic>> fetchDataRadio() async {
+  var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
+  String date = "&date=2018-09-25";
+  String json = "&format=json";
+  final dio = Dio();
+  try {
+    final response = await dio.get(getFetchUrl);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      List<dynamic> channels = data['channels'];
+      return channels;
+    } else {
+      throw Exception('Failed to load data from the API');
+    }
+  } catch (e) {
+    throw Exception('Error: $e');
   }
 }
