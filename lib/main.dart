@@ -57,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
           var item = scheduleData[index];
           dynamic apiDate = item['starttimeutc'];
           dynamic formattedDate = formatApiDate(apiDate);
-          print(formattedDate);
 
           //print(apiDate);
           //  int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
@@ -70,13 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // print(formattedDate);
           // Create a TablaObject from your data,
-          Tablaobject tablaObject = Tablaobject(
-              item['program']['name'],
-              item['description'],
-              item['starttimeutc'],
-              item[formattedDate],
-              item['imageurltemplate']);
-          return ShowTabl(timeTable: tablaObject, formattedDate: '',);
+          Tablaobject tablaObject = Tablaobject(item['program']['name'],
+              item['description'], formattedDate, item['imageurltemplate']);
+          return ShowTabl(
+            timeTable: tablaObject,
+            formattedDate: formattedDate,
+          );
         },
       ),
     );

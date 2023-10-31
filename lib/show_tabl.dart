@@ -6,15 +6,9 @@ class ShowTabl extends StatelessWidget {
   final String formattedDate;
   final dynamic child;
   final Tablaobject timeTable;
-  const ShowTabl(
-      {super.key,
-      required this.timeTable,
-      required this.formattedDate,
-      this.child});
+  const ShowTabl({super.key, required this.timeTable, this.child, required this.formattedDate});
   @override
   Widget build(BuildContext context) {
-    print('formattedDate in ShowTabl: $formattedDate'); // Add this line
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
@@ -33,7 +27,7 @@ class ShowTabl extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "date: $formattedDate",
+              "date: ${timeTable.date}",
               style: const TextStyle(color: Colors.white),
             ),
             Flexible(
