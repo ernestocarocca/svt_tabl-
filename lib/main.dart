@@ -2,23 +2,33 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:svt_tabla/dateconverter.dart';
+import 'package:svt_tabla/pages/home_page.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
 import 'package:intl/intl.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'svt tablå',
-      home: MyHomePage(
-        title: 'timetablet',
-      ),
+
+      //home: //MyHomePage(
+      //title: 'timetablet',
+      // ),
+      home: HomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
