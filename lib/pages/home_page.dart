@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/main.dart';
+import 'package:svt_tabla/pages/pagetimetableList.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
@@ -27,12 +29,6 @@ class _MyHomePageState extends State<HomePage> {
     });
   }
 
-  //fetchRadios() async {
-  //final radioJson = await rootBundle.loadString("assets/radio.json");
-  //radios = MyRadioList.fromJson(radioJson).radios;
-  //  print(radios);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,32 +47,39 @@ class _MyHomePageState extends State<HomePage> {
                 )
                 .make(),
             AppBar(
-              title: 'Svt Radio Tablå'.text.xl4.bold.white.make().shimmer(
+              title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
                   primaryColor: Vx.purple300, secondaryColor: Colors.white),
               backgroundColor: Colors.transparent,
-              elevation: 0.0,
+              elevation: 8.0,
             ).h(100).p16(),
             VxSwiper.builder(
               itemCount: channelsData.length,
               aspectRatio: 1.0,
               enlargeCenterPage: true,
-              itemBuilder: (context, index) {
-                final item = channelsData[index];
+              itemBuilder: (context, imagesIndex) {
+                final item = channelsData[imagesIndex];
                 final imageUrl = item['image'];
-                final text = item['name'];
+
+                //     final text = item['name'];
                 return VxBox(
                         child: ZStack([
                   Align(
-                    alignment: Alignment.center,
-                    child: VStack([Text(text).text.sm.white.bold.make()]),
-                  )
+                      alignment: Alignment.center,
+                      child: [
+                        Icon(
+                          CupertinoIcons.play_circle,
+                          color: Colors.white,
+                        ),
+                        10.heightBox,
+                        "Double tap to play".text.gray300.make(),
+                      ].vStack())
                 ]))
                     .bgImage(
                       DecorationImage(
                           image: NetworkImage(imageUrl),
                           fit: BoxFit.cover,
                           colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.4), BlendMode.darken)),
+                              Colors.black.withOpacity(0.2), BlendMode.darken)),
                     )
                     .border(color: Colors.black, width: 8.0)
                     .withRounded(value: 60.0)
@@ -88,26 +91,6 @@ class _MyHomePageState extends State<HomePage> {
           ],
           fit: StackFit.expand,
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Image.network(
-              'https://static-cdn.sr.se/images/166/1cf8d86c-bcca-4b20-ab83-9b8a7e2e75f2.jpg?preset=2048x1152',
-              width: 45, // Justera bredden efter ditt behov
-              height: 45, // Justera höjden efter ditt behov
-            ),
-            label: 'Radio',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.holiday_village),
-            label: 'Camera',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chats',
-          ),
-        ],
       ),
     );
   }
