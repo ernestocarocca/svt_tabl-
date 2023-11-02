@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +12,6 @@ import 'package:svt_tabla/tablaObject.dart';
 import 'package:intl/intl.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-
   runApp(MyApp());
 }
 
@@ -32,9 +30,9 @@ class MyBottomNavigationBar extends StatefulWidget {
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-  int currentPageIndex = 0;
+  int currentIndex = 0;
 
-  final List<Widget> pages = [
+  final Screen = [
     HomePage(),
     MyHomePage2(),
   ];
@@ -42,43 +40,25 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-          controller: PageController(initialPage: currentPageIndex),
-          children: pages,
-          onPageChanged: (index) {
+      
+        bottomNavigationBar: NavigationBar(
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.explore),
+              label: 'Home',
+            ),
+          ],
+          selectedIndex: currentIndex,
+          onDestinationSelected: (int index) {
             setState(() {
-              currentPageIndex = index;
-              if (currentPageIndex == 1) {
-                setState(() {
-                  MyHomePage2();
-                });
-              } else {
-                setState(() {
-                  HomePage();
-                });
-              }
+              currentIndex = index;
             });
-          }),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.holiday_village),
-            label: 'Radios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.holiday_village),
-            label: 'Camera',
-          ),
-        ],
-        currentIndex: currentPageIndex,
-        onTap: (index) {
-          setState(() {
-            currentPageIndex = index;
-            print('hej');
-            print(currentPageIndex);
-          });
-        },
-      ),
-    );
+          },
+        ),
+        body: [HomePage(), MyHomePage2()][currentIndex]);
   }
 }
