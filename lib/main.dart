@@ -1,30 +1,25 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shimmer/main.dart';
-import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/pages/home_page.dart';
 import 'package:svt_tabla/pages/pagetimetableList.dart';
-import 'package:svt_tabla/show_tabl.dart';
-import 'package:svt_tabla/tablaObject.dart';
-import 'package:intl/intl.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyBottomNavigationBar(),
     );
   }
 }
 
 class MyBottomNavigationBar extends StatefulWidget {
+  const MyBottomNavigationBar({super.key});
+
   @override
   _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
 }
@@ -32,32 +27,32 @@ class MyBottomNavigationBar extends StatefulWidget {
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int currentIndex = 0;
 
-  final Screen = [
-    HomePage(),
-    MyHomePage2(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+        ),
+        drawer: const Drawer(),
         bottomNavigationBar: NavigationBar(
-          destinations: [
+          surfaceTintColor: Colors.amber,
+          destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
+                icon: Icon(Icons.play_circle_fill_sharp), label: 'Radio Play'),
             NavigationDestination(
-              icon: Icon(Icons.explore),
-              label: 'Home',
+              icon: Icon(Icons.radio_rounded),
+              label: 'Radio Tablå',
             ),
           ],
           selectedIndex: currentIndex,
           onDestinationSelected: (int index) {
-            setState(() {
-              currentIndex = index;
-            });
+            setState(
+              () {
+                currentIndex = index;
+              },
+            );
           },
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         ),
         body: [HomePage(), MyHomePage2()][currentIndex]);
   }

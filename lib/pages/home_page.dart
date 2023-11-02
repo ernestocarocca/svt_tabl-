@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/main.dart';
 import 'package:svt_tabla/pages/pagetimetableList.dart';
@@ -31,67 +32,72 @@ class _MyHomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-          child: Stack(
-            // ignore: sort_child_properties_last
-            children: [
-              VxAnimatedBox()
-                  .size(context.screenWidth, context.screenHeight)
-                  .withGradient(
-                    LinearGradient(colors: [
-                      AIColors.primaryColor1,
-                      AIColors.primaryColor2
-                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  )
-                  .make(),
-              AppBar(
-                title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
-                    primaryColor: Vx.purple300, secondaryColor: Colors.white),
-                backgroundColor: Colors.transparent,
-                elevation: 8.0,
-              ).h(100).p16(),
-              VxSwiper.builder(
-                itemCount: channelsData.length,
-                aspectRatio: 1.0,
-                enlargeCenterPage: true,
-                itemBuilder: (context, imagesIndex) {
-                  final item = channelsData[imagesIndex];
-                  final imageUrl = item['image'];
+      body: SafeArea(
+        child: Stack(
+          // ignore: sort_child_properties_last
+          children: [
+            VxAnimatedBox()
+                .size(context.screenWidth, context.screenHeight)
+                .withGradient(
+                  LinearGradient(
+                      colors: [AIColors.primaryColor1, AIColors.primaryColor2],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight),
+                )
+                .make(),
+            AppBar(
+              title: Animate(
+                child: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
+                    duration: Duration(seconds: 4),
+                    primaryColor: Vx.black,
+                    secondaryColor: Colors.white),
+              ).animate().fade(duration: 2000.ms),
+              backgroundColor: Colors.transparent,
+              elevation: 8.0,
+            ).h(100).p16(),
+            VxSwiper.builder(
+              itemCount: channelsData.length,
+              aspectRatio: 1.0,
+              enlargeCenterPage: true,
+              itemBuilder: (context, imagesIndex) {
+                final item = channelsData[imagesIndex];
+                final imageUrl = item['image'];
 
-                  //     final text = item['name'];
-                  return VxBox(
-                          child: ZStack([
-                    Align(
-                        alignment: Alignment.center,
-                        child: [
-                          Icon(
-                            CupertinoIcons.play_circle,
-                            color: Colors.white,
-                          ),
-                          10.heightBox,
-                          "Double tap to play".text.gray300.make(),
-                        ].vStack())
-                  ]))
-                      .bgImage(
-                        DecorationImage(
-                            image: NetworkImage(imageUrl),
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.2),
-                                BlendMode.darken)),
-                      )
-                      .border(color: Colors.black, width: 8.0)
-                      .withRounded(value: 60.0)
-                      .make()
-                      .p16()
-                      .centered();
-                },
-              ),
-            ],
-            fit: StackFit.expand,
-          ),
+                //     final text = item['name'];
+                return VxBox(
+                        child: ZStack([
+                  Align(
+                      alignment: Alignment.center,
+                      child: [
+                        Icon(
+                          CupertinoIcons.play_circle,
+                          color: Colors.white,
+                        ),
+                        10.heightBox,
+                        Animate(
+                            effects: [FadeEffect(), SlideEffect()],
+                            child: "Double tap to play".text.gray300.make()),
+                      ].vStack())
+                ]))
+                    .bgImage(
+                      DecorationImage(
+                          image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.darken)),
+                    )
+                    .border(color: Colors.black, width: 8.0)
+                    .withRounded(value: 60.0)
+                    .make()
+                    .p16()
+                    .centered();
+              },
+            ),
+          ],
+          fit: StackFit.expand,
         ),
-        drawer: Drawer());
+      ),
+    );
   }
 }
 
