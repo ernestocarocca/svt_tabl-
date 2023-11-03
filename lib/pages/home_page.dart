@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:svt_tabla/ai_util.dart';
+import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
+import 'package:svt_tabla/heaven.dart';
 import 'package:svt_tabla/main.dart';
 import 'package:svt_tabla/pages/pagetimetableList.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -15,18 +17,23 @@ class HomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<HomePage> {
   List<dynamic> channelsData = [];
-
+  FetchTimeTable getRadioStation = FetchTimeTable();
   // late List<MyRadio> radios;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // fetchRadios();
-    fetchDataRadio().then((data) {
+
+    fetchData();
+  }
+
+  void fetchData() async {
+    final data = await getRadioStation.fetchDataRadio();
+    if (data != null) {
       setState(() {
         channelsData = data;
       });
-    });
+    }
   }
 
   @override
@@ -48,12 +55,12 @@ class _MyHomePageState extends State<HomePage> {
             AppBar(
               title: Animate(
                 child: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
-                    duration: Duration(seconds: 4),
-                    primaryColor: Vx.black,
+                    duration: Duration(seconds: 10),
+                    primaryColor: Vx.purple300,
                     secondaryColor: Colors.white),
-              ).animate().fade(duration: 2000.ms),
+              ).animate().fade(duration: 1500.ms),
               backgroundColor: Colors.transparent,
-              elevation: 8.0,
+              elevation: 0.0,
             ).h(100).p16(),
             VxSwiper.builder(
               itemCount: channelsData.length,
@@ -69,14 +76,15 @@ class _MyHomePageState extends State<HomePage> {
                   Align(
                       alignment: Alignment.center,
                       child: [
-                        Icon(
+                        const Icon(
                           CupertinoIcons.play_circle,
-                          color: Colors.white,
+                          color: Colors.black,
+                          size: 65,
                         ),
-                        10.heightBox,
+                        45.heightBox,
                         Animate(
                             effects: [FadeEffect(), SlideEffect()],
-                            child: "Double tap to play".text.gray300.make()),
+                            child: "Double tap to play".text.black.make()),
                       ].vStack())
                 ]))
                     .bgImage(
@@ -100,7 +108,7 @@ class _MyHomePageState extends State<HomePage> {
     );
   }
 }
-
+/*
 Future<List<dynamic>> fetchDataRadio() async {
   var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
   String date = "&date=2018-09-25";
@@ -120,3 +128,4 @@ Future<List<dynamic>> fetchDataRadio() async {
     throw Exception('Error: $e');
   }
 }
+*/
