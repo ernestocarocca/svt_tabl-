@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/pages/home_page.dart';
 import 'package:svt_tabla/pages/pagetimetableList.dart';
 
@@ -33,7 +34,11 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         appBar: AppBar(
           backgroundColor: Colors.black,
         ),
-        drawer: const Drawer(),
+        drawer: Drawer(
+          child: Container(
+            color: AIColors.primaryColor2,
+          ),
+        ),
         bottomNavigationBar: NavigationBar(
           surfaceTintColor: Colors.amber,
           destinations: const [

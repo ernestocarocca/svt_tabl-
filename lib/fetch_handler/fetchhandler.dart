@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-
+// fetchar from svtRadio api 
 class FetchTimeTable {
+  // fetch timetable from one radiostation
   Future<List<dynamic>> fetchDataTimeTable() async {
     var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
     String date = "&date=2018-09-25";
@@ -22,6 +23,7 @@ class FetchTimeTable {
   }
 
   Future<List<dynamic>> fetchDataRadio() async {
+    // fetch all radiostaion from svt radio
   var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
   String date = "&date=2018-09-25";
   String json = "&format=json";
