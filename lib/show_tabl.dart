@@ -1,6 +1,8 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/tablaObject.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class ShowTabl extends StatelessWidget {
   //final String formattedDate;
@@ -15,35 +17,32 @@ class ShowTabl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        height: 200,
-        color: Colors.black,
-        child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'TimeTable Name: ${timeTable.timetableName} ',
-              style: const TextStyle(color: Colors.amber),
+      height: 190,
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'TimeTable Name: ${timeTable.timetableName} ',
+            style: const TextStyle(color: Colors.black),
+          ),
+          Text(
+            'Slogan: ${timeTable.slogan} ',
+            style: const TextStyle(color: Colors.black),
+          ),
+          Text(
+            "date: ${timeTable.date}",
+            style: const TextStyle(color: Colors.black),
+          ),
+          Flexible(
+            child: Image.network(
+              timeTable.imageUrl,
+              fit: BoxFit.contain,
             ),
-            Text(
-              'Slogan: ${timeTable.slogan} ',
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
-              "date: ${timeTable.date}",
-              style: const TextStyle(color: Colors.white),
-            ),
-            Flexible(
-              child: Image.network(
-                timeTable.imageUrl,
-                fit: BoxFit.contain,
-              ),
-            ) // Visa bilden här
-          ],
-        )),
-      ),
+          ) // Visa bilden här
+        ],
+      ))
+  
     );
   }
 }
