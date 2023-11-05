@@ -5,6 +5,8 @@ import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 class MyHomePage2 extends StatefulWidget {
   @override
@@ -68,9 +70,34 @@ class _MyHomePageState extends State<MyHomePage2> {
             dynamic formattedDate = formatApiDate(apiDate);
             Tablaobject tablaObject = Tablaobject(item['program']['name'],
                 item['description'], formattedDate, item['imageurltemplate']);
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: ShowTabl(timeTable: tablaObject),
+            return GlassmorphicContainer(
+              margin: EdgeInsets.symmetric(horizontal: 25.0, vertical: 25.0),
+              borderRadius: 10.0, // Anpassa radien efter dina behov
+              blur: 10,
+              alignment: Alignment.center,
+              border: 4.5,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.transparent, Colors.transparent],
+              ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.transparent, Colors.transparent],
+              ),
+              width: 100,
+              height: 100,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    // Vit färg för border
+                     // Justera tjockleken efter dina behov
+                  ),
+                ),
+                child: ShowTabl(timeTable: tablaObject),
+              ),
             );
           },
         ),

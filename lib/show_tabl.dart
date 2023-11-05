@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/tablaObject.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:filter_list/filter_list.dart';
 
 class ShowTabl extends StatelessWidget {
   //final String formattedDate;
@@ -17,7 +18,7 @@ class ShowTabl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 190,
+      height: 100,
       child: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -37,12 +38,12 @@ class ShowTabl extends StatelessWidget {
           Flexible(
             child: Image.network(
               timeTable.imageUrl,
-              fit: BoxFit.contain,
+              height: 45,
+              width: 45,
             ),
           ) // Visa bilden här
         ],
-      ))
-  
+      )),
     );
   }
 }
