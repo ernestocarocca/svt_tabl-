@@ -12,6 +12,7 @@ class ShowTabl extends StatelessWidget {
   final dynamic child;
   final Tablaobject timeTable;
   final GlobalKey backgroundImagekey = GlobalKey();
+
   ShowTabl({
     Key? key,
     this.child,
@@ -81,6 +82,10 @@ class ShowTabl extends StatelessWidget {
                     ),
                     Text(
                       "Datum: ${timeTable.date}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "tid: ${timeTable.time}",
                       style: const TextStyle(color: Colors.white),
                     ),
                   ],

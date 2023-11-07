@@ -21,11 +21,6 @@ class _MyHomePageState extends State<MyHomePage2> {
   void initState() {
     super.initState();
     fetchData();
-    // fetchData().then((data) {
-    // setState(() {
-    // scheduleData = data;
-    //});
-    //});
   }
 
   void fetchData() async {
@@ -68,9 +63,15 @@ class _MyHomePageState extends State<MyHomePage2> {
           itemBuilder: (context, index) {
             var item = scheduleData[index];
             dynamic apiDate = item['starttimeutc'];
-            dynamic formattedDate = formatApiDate(apiDate);
-            Tablaobject tablaObject = Tablaobject(item['program']['name'],
-                item['description'], formattedDate, item['imageurltemplate']);
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formattedTime = YearMonthDayhourMinResul[1];
+            String formatDate = YearMonthDayhourMinResul[0];
+            Tablaobject tablaObject = Tablaobject(
+                item['program']['name'],
+                item['description'],
+                formattedTime,
+                formatDate,
+                item['imageurltemplate']);
             return ShowTabl(timeTable: tablaObject);
           },
         ),

@@ -13,13 +13,14 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<dynamic> channelsData = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
-  Color _selectedColor = AIColors.primaryColor2;
+  AIColors aiColors = AIColors();
+  Color _selectedColor = AIColors.primaryColors.last;
+  int colorIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     fetchData();
   }
 
@@ -41,14 +42,12 @@ class _MyHomePageState extends State<HomePage> {
           // ignore: sort_child_properties_last
           children: [
             VxAnimatedBox()
-                .animDuration(Duration.zero)
+                .animDuration(Duration(milliseconds: 450))
                 .size(context.screenWidth, context.screenHeight)
-                .withGradient(
-                  LinearGradient(colors: [
-                    AIColors.primaryColor1,
-                    _selectedColor,
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                )
+                .withGradient(LinearGradient(
+                    colors: [_selectedColor, AIColors.primaryColors.first],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight))
                 .make(),
             AppBar(
               title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
@@ -61,13 +60,14 @@ class _MyHomePageState extends State<HomePage> {
               aspectRatio: 1.0,
               enlargeCenterPage: true,
               onPageChanged: (index) {
-                final currentColor = channelsData[index];
-                final hexColor = currentColor['color'];
-                final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
+                //   final currentColor = channelsData[index];
+                // final hexColor = currentColor['color'];
+                //final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
 
                 setState(() {
-                  _selectedColor = Color(colorValue);
-                  print(_selectedColor);
+                  colorIndex = index % AIColors.primaryColors.length;
+                  _selectedColor = aiColors.getColor(colorIndex);
+                  print(colorIndex);
                 });
               },
               itemBuilder: (context, imagesIndex) {
@@ -119,6 +119,7 @@ class _MyHomePageState extends State<HomePage> {
     );
   }
 }
+
 /*
 Future<List<dynamic>> fetchDataRadio() async {
   var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
