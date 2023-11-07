@@ -65,8 +65,8 @@ class _MyHomePageState extends State<HomePage> {
                 //final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
 
                 setState(() {
-                  colorIndex = index % AIColors.primaryColors.length;
-                  _selectedColor = aiColors.getColor(colorIndex);
+                    colorIndex = index % AIColors.primaryColors.length;
+                _selectedColor = aiColors.getColor(colorIndex);
                   print(colorIndex);
                 });
               },

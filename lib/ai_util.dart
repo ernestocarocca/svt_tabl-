@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
 class AIColors {
   static final List<Color> primaryColors = [
     Vx.orange600,
@@ -14,6 +12,9 @@ class AIColors {
     Vx.red500,
     Vx.indigo500,
     Vx.cyan700,
+    Vx.blue800,
+    Vx.green800,
+    Vx.purple800,
   ];
 
   Color getColor(int index) {
@@ -23,4 +24,3 @@ class AIColors {
     return Colors.black;
   }
 }
-
