@@ -50,7 +50,7 @@ class ShowTabl extends StatelessWidget {
                     gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withOpacity(0.1),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -59,8 +59,8 @@ class ShowTabl extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20,
-                top: 5,
+                left: 5,
+                bottom: -2,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,8 +80,8 @@ class ShowTabl extends StatelessWidget {
                           .copyWith(color: Colors.white),
                     ),
                     Text(
-                      "datum: ${timeTable.date}",
-                      style: const TextStyle(color: Colors.black),
+                      "Datum: ${timeTable.date}",
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),

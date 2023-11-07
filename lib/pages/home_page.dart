@@ -1,14 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
-import 'package:svt_tabla/heaven.dart';
-import 'package:svt_tabla/main.dart';
-import 'package:svt_tabla/pages/pagetimetableList.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,7 +13,8 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<dynamic> channelsData = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
-  // late List<MyRadio> radios;
+  Color _selectedColor = AIColors.primaryColor2;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -29,6 +25,7 @@ class _MyHomePageState extends State<HomePage> {
 
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
+
     if (data != null) {
       setState(() {
         channelsData = data;
@@ -44,21 +41,18 @@ class _MyHomePageState extends State<HomePage> {
           // ignore: sort_child_properties_last
           children: [
             VxAnimatedBox()
+                .animDuration(Duration.zero)
                 .size(context.screenWidth, context.screenHeight)
                 .withGradient(
-                  LinearGradient(
-                      colors: [AIColors.primaryColor1, AIColors.primaryColor2],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
+                  LinearGradient(colors: [
+                    AIColors.primaryColor1,
+                    _selectedColor,
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 )
                 .make(),
             AppBar(
-              title: Animate(
-                child: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
-                    duration: Duration(seconds: 10),
-                    primaryColor: Vx.purple300,
-                    secondaryColor: Colors.white),
-              ).animate().fade(duration: 1500.ms),
+              title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
+                  primaryColor: Vx.purple300, secondaryColor: Colors.white),
               backgroundColor: Colors.transparent,
               elevation: 0.0,
             ).h(100).p16(),
@@ -66,25 +60,42 @@ class _MyHomePageState extends State<HomePage> {
               itemCount: channelsData.length,
               aspectRatio: 1.0,
               enlargeCenterPage: true,
+              onPageChanged: (index) {
+                final currentColor = channelsData[index];
+                final hexColor = currentColor['color'];
+                final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
+
+                setState(() {
+                  _selectedColor = Color(colorValue);
+                  print(_selectedColor);
+                });
+              },
               itemBuilder: (context, imagesIndex) {
                 final item = channelsData[imagesIndex];
                 final imageUrl = item['image'];
 
+                //   fetchadColor = item['color'];
+
                 //     final text = item['name'];
                 return VxBox(
                         child: ZStack([
-                  Align(
-                      alignment: Alignment.center,
-                      child: [
+                  const Align(
+                    alignment: Alignment.center,
+                    child: VStack(
+                      [
                         const Icon(
                           CupertinoIcons.play_circle,
                           color: Colors.black,
                           size: 65,
                         ),
-                        45.heightBox,
-                        Animate(
-                            effects: [FadeEffect(), SlideEffect()],
-                            child: "Double tap to play".text.black.make()),
+                      ],
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: [
+                        10.heightBox,
+                        "Double tap to play".text.black.make(),
                       ].vStack())
                 ]))
                     .bgImage(
@@ -94,7 +105,7 @@ class _MyHomePageState extends State<HomePage> {
                           colorFilter: ColorFilter.mode(
                               Colors.black.withOpacity(0.2), BlendMode.darken)),
                     )
-                    .border(color: Colors.black, width: 8.0)
+                    .border(color: Colors.black, width: 5.0)
                     .withRounded(value: 60.0)
                     .make()
                     .p16()
