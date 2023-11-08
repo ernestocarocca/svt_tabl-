@@ -15,5 +15,8 @@ class Tablaobject {
     this.time,
     this.slogan,
     this.imageUrl,
-  );
+  )
+  
+  
+  ;
 }

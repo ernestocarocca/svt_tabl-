@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/dateconverter.dart';
@@ -15,7 +16,13 @@ class MyHomePage2 extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage2> {
   List<dynamic> scheduleData = [];
-  FetchTimeTable _apiService = FetchTimeTable();
+  List<dynamic> scheduleDataList = [];
+  List<dynamic> scheduleDataList2 = [];
+  List<dynamic> scheduleDataListPast = [];
+  List<dynamic> addtolist = [];
+  FetchTimeTable _apiServicePast = FetchTimeTable();
+  FetchTimeTable _apiServiceCurrentDay = FetchTimeTable();
+  FetchTimeTable _apiServiceFuture = FetchTimeTable();
 
   @override
   void initState() {
@@ -25,10 +32,23 @@ class _MyHomePageState extends State<MyHomePage2> {
 
   void fetchData() async {
     try {
-      final data = await _apiService.fetchDataTimeTable();
+      final data = await _apiServiceCurrentDay.fetchDataTimeTable();
+      final data2 = await _apiServiceFuture
+          .fetchDataTimeTableFuture(); // fetch furure date
+      final data3 =
+          await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
+
       if (data != null) {
-        print("Fetched data: $data"); // Skriv ut data från API-anropet
         setState(() {
+          scheduleDataListPast = data3;
+          addtolist.addAll(scheduleDataListPast);
+          scheduleDataList = data;
+          addtolist.addAll(scheduleDataList);
+          scheduleDataList2 = data2;
+          addtolist.addAll(scheduleDataList2);
+
+          print(addtolist.length);
+
           scheduleData = data;
         });
       } else {
@@ -51,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage2> {
       ),
       body: Container(
         /*
+
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [AIColors.primaryColor1, AIColors.primaryColor2],
@@ -59,9 +80,9 @@ class _MyHomePageState extends State<MyHomePage2> {
           ),
         ),*/
         child: ListView.builder(
-          itemCount: scheduleData.length,
+          itemCount: addtolist.length,
           itemBuilder: (context, index) {
-            var item = scheduleData[index];
+            var item = addtolist[index];
             dynamic apiDate = item['starttimeutc'];
             List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
             String formattedTime = YearMonthDayhourMinResul[1];
@@ -76,6 +97,11 @@ class _MyHomePageState extends State<MyHomePage2> {
           },
         ),
       ),
+      floatingActionButton: ElevatedButton(
+          onPressed: () {
+            fetchData();
+          },
+          child: Text('fetchahär')),
     );
   }
 }

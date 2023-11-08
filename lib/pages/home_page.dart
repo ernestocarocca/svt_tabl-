@@ -1,3 +1,4 @@
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -5,31 +6,43 @@ import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 
+
+//import 'package:flutter_radio_player/flutter_radio_player.dart';
+
+//FlutterRadioPlayer _flutterRadioPlayer = FlutterRadioPlayer();
+
 class HomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<HomePage> {
+  //AudioPlayer audioPlayer = AudioPlayer();
+  //bool isPlaying = false;
+  
   List<dynamic> channelsData = [];
+  List<dynamic> programs = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
+
   AIColors aiColors = AIColors();
   Color _selectedColor = AIColors.primaryColors.last;
   int colorIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+   
     fetchData();
   }
 
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
-
-    if (data != null) {
+    //  final dataP2 = await getRadioStation.fetchDataP2();
+    if (true) {
       setState(() {
         channelsData = data;
+        // programs = dataP2;
+        print(programs);
       });
     }
   }
@@ -65,8 +78,8 @@ class _MyHomePageState extends State<HomePage> {
                 //final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
 
                 setState(() {
-                    colorIndex = index % AIColors.primaryColors.length;
-                _selectedColor = aiColors.getColor(colorIndex);
+                  colorIndex = index % AIColors.primaryColors.length;
+                  _selectedColor = aiColors.getColor(colorIndex);
                   print(colorIndex);
                 });
               },
