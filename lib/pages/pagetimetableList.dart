@@ -23,18 +23,19 @@ class _MyHomePageState extends State<MyHomePage2> {
   FetchTimeTable _apiServicePast = FetchTimeTable();
   FetchTimeTable _apiServiceCurrentDay = FetchTimeTable();
   FetchTimeTable _apiServiceFuture = FetchTimeTable();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_scrollListener);
     fetchData();
   }
 
   void fetchData() async {
     try {
       final data = await _apiServiceCurrentDay.fetchDataTimeTable();
-      final data2 = await _apiServiceFuture
-          .fetchDataTimeTableFuture(); // fetch furure date
+
       final data3 =
           await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
 
@@ -44,12 +45,29 @@ class _MyHomePageState extends State<MyHomePage2> {
           addtolist.addAll(scheduleDataListPast);
           scheduleDataList = data;
           addtolist.addAll(scheduleDataList);
-          scheduleDataList2 = data2;
-          addtolist.addAll(scheduleDataList2);
 
           print(addtolist.length);
 
           scheduleData = data;
+        });
+      } else {
+        print("Data is null");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
+  void fetchDataOnSccroll() async {
+    try {
+      final data2 =
+          await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
+
+      if (data2 != null) {
+        setState(() {
+          scheduleDataList2 = data2;
+          addtolist.addAll(scheduleDataList2);
+          print(addtolist.length);
         });
       } else {
         print("Data is null");
@@ -80,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage2> {
           ),
         ),*/
         child: ListView.builder(
+          controller: _scrollController,
           itemCount: addtolist.length,
           itemBuilder: (context, index) {
             var item = addtolist[index];
@@ -103,5 +122,11 @@ class _MyHomePageState extends State<MyHomePage2> {
           },
           child: Text('fetchahär')),
     );
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.extentAfter == 0) {
+      fetchDataOnSccroll();
+    }
   }
 }
