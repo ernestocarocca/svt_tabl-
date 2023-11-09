@@ -16,39 +16,93 @@ class MyHomePage2 extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage2> {
   List<dynamic> scheduleData = [];
-  List<dynamic> scheduleDataList = [];
-  List<dynamic> scheduleDataList2 = [];
   List<dynamic> scheduleDataListPast = [];
-  List<dynamic> addtolist = [];
-  FetchTimeTable _apiServicePast = FetchTimeTable();
+  List<dynamic> fetchedData = [];
+  List<dynamic> scheduleDataListFuture = [];
+  DateTime date = DateTime.now();
+  bool isTop = false;
+  List<dynamic> listToShow = [];
   FetchTimeTable _apiServiceCurrentDay = FetchTimeTable();
-  FetchTimeTable _apiServiceFuture = FetchTimeTable();
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 50, keepScrollOffset: true);
+  double scrollPosition = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        isTop = _scrollController.position.pixels == 0;
+        if (isTop) {
+          setState(() {
+            
+
+            print(scrollPosition);
+            var item = listToShow.first;
+         
+            dynamic apiDate = item['starttimeutc'];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
+            var parseDate = DateTime.parse(formatDate);
+            date = parseDate;
+            print(parseDate);
+
+            date = date.subtract(Duration(days: 1));
+          });
+
+          print(date);
+
+          fetchData();
+          print('At the top');
+        } else {
+          setState(() {
+            var item = listToShow.last;
+            dynamic apiDate = item['starttimeutc'];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
+            var parseDate = DateTime.parse(formatDate);
+            date = parseDate;
+            print(parseDate);
+
+            date = date.add(Duration(days: 1));
+          });
+          fetchData();
+          print('At the bottom');
+          print(scrollPosition);
+        }
+      }
+    });
     fetchData();
   }
 
   void fetchData() async {
     try {
-      final data = await _apiServiceCurrentDay.fetchDataTimeTable();
+      final dataCurrentDate =
+          await _apiServiceCurrentDay.fetchDataTimeTable(date);
 
-      final data3 =
-          await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
+      //  final data3 =
+      //    await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
 
-      if (data != null) {
+      if (dataCurrentDate != null) {
         setState(() {
-          scheduleDataListPast = data3;
-          addtolist.addAll(scheduleDataListPast);
-          scheduleDataList = data;
-          addtolist.addAll(scheduleDataList);
+          fetchedData = dataCurrentDate;
+          if (isTop) {
+            print('isTop');
+            print(fetchedData.length);
+            fetchedData.addAll(listToShow);
 
-          print(addtolist.length);
+            listToShow = fetchedData;
 
-          scheduleData = data;
+            print(fetchedData.length);
+          } else {
+            print('not is top');
+            print(listToShow.length);
+            listToShow.addAll(fetchedData);
+            print(listToShow);
+          }
+
+          // scheduleData = dataCurrentDate;
         });
       } else {
         print("Data is null");
@@ -58,24 +112,6 @@ class _MyHomePageState extends State<MyHomePage2> {
     }
   }
 
-  void fetchDataOnSccroll() async {
-    try {
-      final data2 =
-          await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
-
-      if (data2 != null) {
-        setState(() {
-          scheduleDataList2 = data2;
-          addtolist.addAll(scheduleDataList2);
-          print(addtolist.length);
-        });
-      } else {
-        print("Data is null");
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,20 +124,11 @@ class _MyHomePageState extends State<MyHomePage2> {
         ),
       ),
       body: Container(
-        /*
-
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AIColors.primaryColor1, AIColors.primaryColor2],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),*/
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: addtolist.length,
+          itemCount: listToShow.length,
           itemBuilder: (context, index) {
-            var item = addtolist[index];
+            var item = listToShow[index];
             dynamic apiDate = item['starttimeutc'];
             List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
             String formattedTime = YearMonthDayhourMinResul[1];
@@ -124,9 +151,6 @@ class _MyHomePageState extends State<MyHomePage2> {
     );
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.extentAfter == 0) {
-      fetchDataOnSccroll();
-    }
+
   }
-}
+

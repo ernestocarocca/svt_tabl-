@@ -6,18 +6,17 @@ import 'package:dio/dio.dart';
 class FetchTimeTable {
   // fetch timetable from one radiostation
 
-  Future<List<dynamic>> fetchDataTimeTable() async {
+  Future<List<dynamic>> fetchDataTimeTable(DateTime date) async {
     var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
     //  String date = "&date=2018-09-25";
     String json = "&format=json";
 
-    DateTime now = DateTime.now();
-    String date = DateTime(now.year, now.month, now.day)
+    String formattedDate = DateTime(date.year, date.month, date.day)
         .toString()
         .replaceAll("00:00:00.000", "");
-    date = '&date=$date'.trim();
+    formattedDate = '&date=$formattedDate'.trim();
 
-    getFetchUrl = getFetchUrl + date + json;
+    getFetchUrl = getFetchUrl + formattedDate + json;
 
     final dio = Dio();
     try {
@@ -26,7 +25,7 @@ class FetchTimeTable {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
         List<dynamic> schedule = data['schedule'];
-       
+
         return schedule;
       } else {
         throw Exception('Failed to load data from the API');
@@ -81,63 +80,5 @@ class FetchTimeTable {
 
 
 
-  Future<List<dynamic>> fetchDataTimeTableFuture() async {
-    var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
-    //  String date = "&date=2018-09-25";
-    String json = "&format=json";
 
-    DateTime now = DateTime.now().add(Duration(days: 1));
-    String date = DateTime(now.year, now.month, now.day)
-        .toString()
-        .replaceAll("00:00:00.000", "");
-    date = '&date=$date'.trim();
-
-    getFetchUrl = getFetchUrl + date + json;
-
-    final dio = Dio();
-    try {
-      final response = await dio.get(getFetchUrl);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = response.data;
-        List<dynamic> schedule = data['schedule'];
-       
-        return schedule;
-      } else {
-        throw Exception('Failed to load data from the API');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
-  Future<List<dynamic>> fetchDataTimeTablePast() async {
-    var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
-    //  String date = "&date=2018-09-25";
-    String json = "&format=json";
-
-    DateTime now = DateTime.now().subtract(Duration(days: 1));
-    String date = DateTime(now.year, now.month, now.day)
-        .toString()
-        .replaceAll("00:00:00.000", "");
-    date = '&date=$date'.trim();
-
-    getFetchUrl = getFetchUrl + date + json;
-
-    final dio = Dio();
-    try {
-      final response = await dio.get(getFetchUrl);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = response.data;
-        List<dynamic> schedule = data['schedule'];
-       
-        return schedule;
-      } else {
-        throw Exception('Failed to load data from the API');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-
-}
 }

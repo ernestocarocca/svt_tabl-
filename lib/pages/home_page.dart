@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 
-
 //import 'package:flutter_radio_player/flutter_radio_player.dart';
 
 //FlutterRadioPlayer _flutterRadioPlayer = FlutterRadioPlayer();
@@ -19,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   //AudioPlayer audioPlayer = AudioPlayer();
   //bool isPlaying = false;
-  
+
   List<dynamic> channelsData = [];
   List<dynamic> programs = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
@@ -31,7 +30,7 @@ class _MyHomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-   
+
     fetchData();
   }
 
@@ -80,7 +79,6 @@ class _MyHomePageState extends State<HomePage> {
                 setState(() {
                   colorIndex = index % AIColors.primaryColors.length;
                   _selectedColor = aiColors.getColor(colorIndex);
-                  print(colorIndex);
                 });
               },
               itemBuilder: (context, imagesIndex) {
