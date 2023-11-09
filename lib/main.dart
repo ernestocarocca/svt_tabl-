@@ -1,7 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
+import 'package:svt_tabla/pages/audioplayer.dart';
 import 'package:svt_tabla/pages/home_page.dart';
 import 'package:svt_tabla/pages/pagetimetableList.dart';
 
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyBottomNavigationBar(),
+      home: //RadioPlayerPage(),
+          MyBottomNavigationBar(),
     );
   }
 }
@@ -32,6 +35,7 @@ class MyBottomNavigationBar extends StatefulWidget {
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
+  Duration position = Duration.zero;
   int currentIndex = 0;
   List<dynamic> channelsData = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
@@ -52,31 +56,45 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           backgroundColor: Colors.black,
         ),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.cyan,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            // padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+
+              //padding: EdgeInsets.zero,
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      'asset/assets/radio.jpg',
+                      width: double.infinity,
+                      height: 350,
+                      fit: BoxFit.cover,
+                    )),
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.cyan,
+                  ),
+                  child: Text('Drawer Header'),
                 ),
-                child: Text('Drawer Header'),
-              ),
-              ListTile(
-                title: const Text('Radio lista'),
-                onTap: () {
-                  setState(() {
-                    fetchData();
-                  });
-                },
-              ),
-              ListTile(
-                title: const Text('Radiolist'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-            ],
+                ListTile(
+                  title: const Text('Radio lista'),
+                  onTap: () {
+                    setState(() {
+                      fetchData();
+                    });
+                  },
+                ),
+                ListTile(
+                  title: const Text('Radiolist'),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: NavigationBar(

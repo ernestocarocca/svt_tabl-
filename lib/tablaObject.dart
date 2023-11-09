@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class Tablaobject {
@@ -15,8 +14,5 @@ class Tablaobject {
     this.time,
     this.slogan,
     this.imageUrl,
-  )
-  
-  
-  ;
+  );
 }

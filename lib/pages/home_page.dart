@@ -1,6 +1,8 @@
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:svt_tabla/pages/audioplayer.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
@@ -72,10 +74,6 @@ class _MyHomePageState extends State<HomePage> {
               aspectRatio: 1.0,
               enlargeCenterPage: true,
               onPageChanged: (index) {
-                //   final currentColor = channelsData[index];
-                // final hexColor = currentColor['color'];
-                //final colorValue = int.tryParse('0x$hexColor') ?? 0xFF000000;
-
                 setState(() {
                   colorIndex = index % AIColors.primaryColors.length;
                   _selectedColor = aiColors.getColor(colorIndex);
@@ -84,21 +82,32 @@ class _MyHomePageState extends State<HomePage> {
               itemBuilder: (context, imagesIndex) {
                 final item = channelsData[imagesIndex];
                 final imageUrl = item['image'];
+                print(imageUrl.length);
 
-                //   fetchadColor = item['color'];
-
-                //     final text = item['name'];
                 return VxBox(
                         child: ZStack([
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
                     child: VStack(
                       [
-                        const Icon(
-                          CupertinoIcons.play_circle,
-                          color: Colors.black,
-                          size: 65,
-                        ),
+                        CircleAvatar(
+                            radius: 50,
+                            backgroundColor: ShimmerEffect.defaultColor,
+                            child: IconButton(
+                              color: Colors.black,
+                              icon: Icon(
+                                Icons.play_arrow_rounded,
+                              ),
+                              iconSize: 75,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RadioPlayerPage(),
+                                  ),
+                                );
+                              },
+                            )),
                       ],
                     ),
                   ),
@@ -106,7 +115,6 @@ class _MyHomePageState extends State<HomePage> {
                       alignment: Alignment.center,
                       child: [
                         10.heightBox,
-                        "Double tap to play".text.black.make(),
                       ].vStack())
                 ]))
                     .bgImage(
@@ -130,25 +138,3 @@ class _MyHomePageState extends State<HomePage> {
     );
   }
 }
-
-/*
-Future<List<dynamic>> fetchDataRadio() async {
-  var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
-  String date = "&date=2018-09-25";
-  String json = "&format=json";
-  final dio = Dio();
-  try {
-    final response = await dio.get(getFetchUrl);
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
-      List<dynamic> channels = data['channels'];
-      return channels;
-    } else {
-      throw Exception('Failed to load data from the API');
-    }
-  } catch (e) {
-    throw Exception('Error: $e');
-  }
-}
-*/
