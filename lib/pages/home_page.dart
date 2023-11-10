@@ -24,7 +24,7 @@ class _MyHomePageState extends State<HomePage> {
   List<dynamic> channelsData = [];
   List<dynamic> programs = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
-
+  late String thisUrl;
   AIColors aiColors = AIColors();
   Color _selectedColor = AIColors.primaryColors.last;
   int colorIndex = 0;
@@ -36,8 +36,13 @@ class _MyHomePageState extends State<HomePage> {
     fetchData();
   }
 
+  String convertHttpToHttps(String url) {
+    return url.replaceFirst("http://", "https://");
+  }
+
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
+
     //  final dataP2 = await getRadioStation.fetchDataP2();
     if (true) {
       setState(() {
@@ -80,8 +85,12 @@ class _MyHomePageState extends State<HomePage> {
                 });
               },
               itemBuilder: (context, imagesIndex) {
-                final item = channelsData[imagesIndex];
-                final imageUrl = item['image'];
+                final radio = channelsData[imagesIndex];
+
+                final imageUrl = radio['image'];
+                final radioUrl = radio['liveaudio']['url'];
+                final radioName = radio['name'];
+                final convertedRadioUrl = convertHttpToHttps(radioUrl);
                 print(imageUrl.length);
 
                 return VxBox(
@@ -100,10 +109,14 @@ class _MyHomePageState extends State<HomePage> {
                               ),
                               iconSize: 75,
                               onPressed: () {
+                                final thisUrl = convertedRadioUrl;
+                                print(thisUrl);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => RadioPlayerPage(),
+                                    builder: (context) => RadioPlayerPage(
+                                        radioUrl: thisUrl,
+                                        radioName: radioName),
                                   ),
                                 );
                               },

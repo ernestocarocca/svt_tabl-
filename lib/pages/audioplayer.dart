@@ -4,14 +4,19 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
+import 'package:svt_tabla/tablaObject.dart';
 
 class RadioPlayerPage extends StatefulWidget {
+  final String radioUrl;
+  final String radioName;
+  RadioPlayerPage({required this.radioUrl, required this.radioName});
   @override
   _RadioPlayerPageState createState() => _RadioPlayerPageState();
 }
 
 class _RadioPlayerPageState extends State<RadioPlayerPage> {
   final audioPlayer = AudioPlayer();
+  List<Tablaobject> radioList = [];
 
   bool isPlaying = false;
   Duration duration = Duration.zero;
@@ -23,6 +28,7 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
   @override
   void initState() {
     super.initState();
+    // Anropa _play här för att starta uppspelningen när sidan skapas
     fetchData();
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
@@ -50,8 +56,8 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
     if (true) {
       setState(() {
         channelsData = data;
+
         // programs = dataP2;
-     
       });
     }
   }
@@ -90,7 +96,7 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
               height: 4,
             ),
             Text(
-              'Radio Kanal Spelas',
+              widget.radioName,
               style: TextStyle(fontSize: 20),
             ),
             Slider(
@@ -125,9 +131,7 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
                   if (isPlaying) {
                     await audioPlayer.pause();
                   } else {
-                    String url =
-                        'https://sverigesradio.se/topsy/direkt/srapi/164.mp3';
-                    await audioPlayer.play(url);
+                    await audioPlayer.play(widget.radioUrl);
                   }
                 },
               ),
