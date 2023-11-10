@@ -1,9 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
+import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 class MyHomePage2 extends StatefulWidget {
   @override
@@ -12,69 +16,141 @@ class MyHomePage2 extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage2> {
   List<dynamic> scheduleData = [];
-  FetchTimeTable _apiService = FetchTimeTable();
+  List<dynamic> scheduleDataListPast = [];
+  List<dynamic> fetchedData = [];
+  List<dynamic> scheduleDataListFuture = [];
+  DateTime date = DateTime.now();
+  bool isTop = false;
+  List<dynamic> listToShow = [];
+  FetchTimeTable _apiServiceCurrentDay = FetchTimeTable();
+  ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 50, keepScrollOffset: true);
+  double scrollPosition = 0.0;
 
   @override
   void initState() {
     super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        isTop = _scrollController.position.pixels == 0;
+        if (isTop) {
+          setState(() {
+            
+
+            print(scrollPosition);
+            var item = listToShow.first;
+         
+            dynamic apiDate = item['starttimeutc'];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
+            var parseDate = DateTime.parse(formatDate);
+            date = parseDate;
+            print(parseDate);
+
+            date = date.subtract(Duration(days: 1));
+          });
+
+          print(date);
+
+          fetchData();
+          print('At the top');
+        } else {
+          setState(() {
+            var item = listToShow.last;
+            dynamic apiDate = item['starttimeutc'];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
+            var parseDate = DateTime.parse(formatDate);
+            date = parseDate;
+            print(parseDate);
+
+            date = date.add(Duration(days: 1));
+          });
+          fetchData();
+          print('At the bottom');
+          print(scrollPosition);
+        }
+      }
+    });
     fetchData();
-    // fetchData().then((data) {
-    // setState(() {
-    // scheduleData = data;
-    //});
-    //});
   }
 
   void fetchData() async {
-    final data = await _apiService.fetchDataTimeTable();
-    if (data != null) {
-      setState(() {
-        scheduleData = data;
-      });
+    try {
+      final dataCurrentDate =
+          await _apiServiceCurrentDay.fetchDataTimeTable(date);
+
+      //  final data3 =
+      //    await _apiServicePast.fetchDataTimeTablePast(); // fetch past date
+
+      if (dataCurrentDate != null) {
+        setState(() {
+          fetchedData = dataCurrentDate;
+          if (isTop) {
+            print('isTop');
+            print(fetchedData.length);
+            fetchedData.addAll(listToShow);
+
+            listToShow = fetchedData;
+
+            print(fetchedData.length);
+          } else {
+            print('not is top');
+            print(listToShow.length);
+            listToShow.addAll(fetchedData);
+            print(listToShow);
+          }
+
+          // scheduleData = dataCurrentDate;
+        });
+      } else {
+        print("Data is null");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Image.network(
-            'https://static-cdn.sr.se/images/166/1cf8d86c-bcca-4b20-ab83-9b8a7e2e75f2.jpg?preset=2048x1152',
-            fit: BoxFit.cover, // Justera höjden efter ditt behov
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Image.network(
+          'https://static-cdn.sr.se/images/166/1cf8d86c-bcca-4b20-ab83-9b8a7e2e75f2.jpg?preset=2048x1152',
+          fit: BoxFit.cover, // Justera höjden efter ditt behov
         ),
-        body: ListView.builder(
-          itemCount: scheduleData.length,
+      ),
+      body: Container(
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: listToShow.length,
           itemBuilder: (context, index) {
-            var item = scheduleData[index];
+            var item = listToShow[index];
             dynamic apiDate = item['starttimeutc'];
-            dynamic formattedDate = formatApiDate(apiDate);
-            Tablaobject tablaObject = Tablaobject(item['program']['name'],
-                item['description'], formattedDate, item['imageurltemplate']);
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formattedTime = YearMonthDayhourMinResul[1];
+            String formatDate = YearMonthDayhourMinResul[0];
+            Tablaobject tablaObject = Tablaobject(
+                item['program']['name'],
+                item['description'],
+                formattedTime,
+                formatDate,
+                item['imageurltemplate']);
             return ShowTabl(timeTable: tablaObject);
-            //  formattedDate: formattedDate,
           },
-        ));
+        ),
+      ),
+      floatingActionButton: ElevatedButton(
+          onPressed: () {
+            fetchData();
+          },
+          child: Text('fetchahär')),
+    );
   }
-}
-/*
-Future<List<dynamic>> fetchData() async {
-  var getFetchUrl = "https://api.sr.se/v2/scheduledepisodes?channelid=158";
-  String date = "&date=2018-09-25";
-  String json = "&format=json";
-  final dio = Dio();
-  try {
-    final response = await dio.get(getFetchUrl + date + json);
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
-      List<dynamic> schedule = data['schedule'];
-      return schedule;
-    } else {
-      throw Exception('Failed to load data from the API');
-    }
-  } catch (e) {
-    throw Exception('Error: $e');
+
   }
-}*/
+

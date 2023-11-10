@@ -1,14 +1,16 @@
-import 'package:dio/dio.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:svt_tabla/pages/audioplayer.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
-import 'package:svt_tabla/heaven.dart';
-import 'package:svt_tabla/main.dart';
-import 'package:svt_tabla/pages/pagetimetableList.dart';
-import 'package:velocity_x/velocity_x.dart';
+
+//import 'package:flutter_radio_player/flutter_radio_player.dart';
+
+//FlutterRadioPlayer _flutterRadioPlayer = FlutterRadioPlayer();
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,22 +18,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
+  //AudioPlayer audioPlayer = AudioPlayer();
+  //bool isPlaying = false;
+
   List<dynamic> channelsData = [];
+  List<dynamic> programs = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
-  // late List<MyRadio> radios;
+  late String thisUrl;
+  AIColors aiColors = AIColors();
+  Color _selectedColor = AIColors.primaryColors.last;
+  int colorIndex = 0;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     fetchData();
   }
 
+  String convertHttpToHttps(String url) {
+    return url.replaceFirst("http://", "https://");
+  }
+
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
-    if (data != null) {
+
+    //  final dataP2 = await getRadioStation.fetchDataP2();
+    if (true) {
       setState(() {
         channelsData = data;
+        // programs = dataP2;
+        print(programs);
       });
     }
   }
@@ -44,21 +61,16 @@ class _MyHomePageState extends State<HomePage> {
           // ignore: sort_child_properties_last
           children: [
             VxAnimatedBox()
+                .animDuration(Duration(milliseconds: 450))
                 .size(context.screenWidth, context.screenHeight)
-                .withGradient(
-                  LinearGradient(
-                      colors: [AIColors.primaryColor1, AIColors.primaryColor2],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
-                )
+                .withGradient(LinearGradient(
+                    colors: [_selectedColor, AIColors.primaryColors.first],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight))
                 .make(),
             AppBar(
-              title: Animate(
-                child: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
-                    duration: Duration(seconds: 10),
-                    primaryColor: Vx.purple300,
-                    secondaryColor: Colors.white),
-              ).animate().fade(duration: 1500.ms),
+              title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
+                  primaryColor: Vx.purple300, secondaryColor: Colors.white),
               backgroundColor: Colors.transparent,
               elevation: 0.0,
             ).h(100).p16(),
@@ -66,25 +78,56 @@ class _MyHomePageState extends State<HomePage> {
               itemCount: channelsData.length,
               aspectRatio: 1.0,
               enlargeCenterPage: true,
+              onPageChanged: (index) {
+                setState(() {
+                  colorIndex = index % AIColors.primaryColors.length;
+                  _selectedColor = aiColors.getColor(colorIndex);
+                });
+              },
               itemBuilder: (context, imagesIndex) {
-                final item = channelsData[imagesIndex];
-                final imageUrl = item['image'];
+                final radio = channelsData[imagesIndex];
 
-                //     final text = item['name'];
+                final imageUrl = radio['image'];
+                final radioUrl = radio['liveaudio']['url'];
+                final radioName = radio['name'];
+                final convertedRadioUrl = convertHttpToHttps(radioUrl);
+                print(imageUrl.length);
+
                 return VxBox(
                         child: ZStack([
                   Align(
+                    alignment: Alignment.center,
+                    child: VStack(
+                      [
+                        CircleAvatar(
+                            radius: 50,
+                            backgroundColor: ShimmerEffect.defaultColor,
+                            child: IconButton(
+                              color: Colors.black,
+                              icon: Icon(
+                                Icons.play_arrow_rounded,
+                              ),
+                              iconSize: 75,
+                              onPressed: () {
+                                final thisUrl = convertedRadioUrl;
+                                print(thisUrl);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RadioPlayerPage(
+                                        radioUrl: thisUrl,
+                                        radioName: radioName),
+                                  ),
+                                );
+                              },
+                            )),
+                      ],
+                    ),
+                  ),
+                  Align(
                       alignment: Alignment.center,
                       child: [
-                        const Icon(
-                          CupertinoIcons.play_circle,
-                          color: Colors.black,
-                          size: 65,
-                        ),
-                        45.heightBox,
-                        Animate(
-                            effects: [FadeEffect(), SlideEffect()],
-                            child: "Double tap to play".text.black.make()),
+                        10.heightBox,
                       ].vStack())
                 ]))
                     .bgImage(
@@ -94,7 +137,7 @@ class _MyHomePageState extends State<HomePage> {
                           colorFilter: ColorFilter.mode(
                               Colors.black.withOpacity(0.2), BlendMode.darken)),
                     )
-                    .border(color: Colors.black, width: 8.0)
+                    .border(color: Colors.black, width: 5.0)
                     .withRounded(value: 60.0)
                     .make()
                     .p16()
@@ -108,24 +151,3 @@ class _MyHomePageState extends State<HomePage> {
     );
   }
 }
-/*
-Future<List<dynamic>> fetchDataRadio() async {
-  var getFetchUrl = "http://api.sr.se/api/v2/channels?&format=json";
-  String date = "&date=2018-09-25";
-  String json = "&format=json";
-  final dio = Dio();
-  try {
-    final response = await dio.get(getFetchUrl);
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
-      List<dynamic> channels = data['channels'];
-      return channels;
-    } else {
-      throw Exception('Failed to load data from the API');
-    }
-  } catch (e) {
-    throw Exception('Error: $e');
-  }
-}
-*/

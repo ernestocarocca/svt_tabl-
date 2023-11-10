@@ -1,7 +1,12 @@
 import 'package:intl/intl.dart';
 
-String formatApiDate(String apiDate) {
+List<String> formatApiDate(String apiDate) {
+  
+  final YearMd = 'yyyy-MM-dd';
+  final hourMin = 'HH:mm';
   int timestamp = int.parse(apiDate.replaceAll(RegExp(r'[^0-9]'), ''));
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  return DateFormat('yyyy-MM-dd').format(dateTime);
+  final formattedTime = DateFormat(YearMd).format(dateTime);
+  final formattedDate = DateFormat(hourMin).format(dateTime);
+  return [formattedTime,formattedDate];
 }
