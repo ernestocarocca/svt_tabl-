@@ -2,14 +2,19 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:svt_tabla/dateconverter.dart';
+
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 import 'package:svt_tabla/tablaObject.dart';
 
 class RadioPlayerPage extends StatefulWidget {
   final String radioUrl;
   final String radioName;
-  RadioPlayerPage({required this.radioUrl, required this.radioName});
+  final String imageUrl;
+  const RadioPlayerPage(
+      {super.key,
+      required this.radioUrl,
+      required this.radioName,
+      required this.imageUrl});
   @override
   _RadioPlayerPageState createState() => _RadioPlayerPageState();
 }
@@ -28,36 +33,30 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
   @override
   void initState() {
     super.initState();
-    // Anropa _play här för att starta uppspelningen när sidan skapas
     fetchData();
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
         isPlaying = state == PlayerState.PLAYING;
-        print(isPlaying);
       });
     });
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
         duration = newDuration;
-        print('Duration $duration + $counter');
       });
     });
     audioPlayer.onAudioPositionChanged.listen((newPosition) {
       setState(() {
         position = newPosition;
-        //  isPlaying = audioPlayer.state == PlayerState.PLAYING;
       });
     });
   }
 
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
-    //  final dataP2 = await getRadioStation.fetchDataP2();
+
     if (true) {
       setState(() {
         channelsData = data;
-
-        // programs = dataP2;
       });
     }
   }
@@ -78,8 +77,8 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                'assets/radio.jpg',
+              child: Image.network(
+                widget.imageUrl,
                 width: double.infinity,
                 height: 350,
                 fit: BoxFit.cover,
@@ -97,8 +96,9 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
             ),
             Text(
               widget.radioName,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
+            // shows sek and the position of sekunds
             Slider(
               min: 0,
               max: max(1.0, duration.inSeconds.toDouble()),
@@ -116,7 +116,9 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(formattedTime(position)),
-                  Text(formattedTime(duration - position)),
+
+                  // if use of duration - sekunds shows the time left in exampel podCast
+                  Text(formattedTime(duration)),
                 ],
               ),
             ),
@@ -143,6 +145,7 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
   }
 }
 
+// fotmattime that shows duration in hour min sekunds
 String formattedTime(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
   final hours = twoDigits(duration.inHours);

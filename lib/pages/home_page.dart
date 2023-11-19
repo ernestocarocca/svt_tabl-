@@ -1,26 +1,18 @@
-//import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:svt_tabla/pages/audioplayer.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:flutter/services.dart';
 import 'package:svt_tabla/ai_util.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 
-//import 'package:flutter_radio_player/flutter_radio_player.dart';
-
-//FlutterRadioPlayer _flutterRadioPlayer = FlutterRadioPlayer();
-
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<HomePage> {
-  //AudioPlayer audioPlayer = AudioPlayer();
-  //bool isPlaying = false;
-
   List<dynamic> channelsData = [];
   List<dynamic> programs = [];
   FetchTimeTable getRadioStation = FetchTimeTable();
@@ -32,23 +24,22 @@ class _MyHomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
+// fetchData when Render of page
     fetchData();
   }
 
+// converts http to https
   String convertHttpToHttps(String url) {
     return url.replaceFirst("http://", "https://");
   }
 
+//fetch data from  using  FetchTimeTable class
   void fetchData() async {
     final data = await getRadioStation.fetchDataRadio();
 
-    //  final dataP2 = await getRadioStation.fetchDataP2();
     if (true) {
       setState(() {
         channelsData = data;
-        // programs = dataP2;
-        print(programs);
       });
     }
   }
@@ -58,10 +49,10 @@ class _MyHomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: Stack(
-          // ignore: sort_child_properties_last
+          fit: StackFit.expand,
           children: [
             VxAnimatedBox()
-                .animDuration(Duration(milliseconds: 450))
+                .animDuration(const Duration(milliseconds: 450))
                 .size(context.screenWidth, context.screenHeight)
                 .withGradient(LinearGradient(
                     colors: [_selectedColor, AIColors.primaryColors.first],
@@ -91,7 +82,6 @@ class _MyHomePageState extends State<HomePage> {
                 final radioUrl = radio['liveaudio']['url'];
                 final radioName = radio['name'];
                 final convertedRadioUrl = convertHttpToHttps(radioUrl);
-                print(imageUrl.length);
 
                 return VxBox(
                         child: ZStack([
@@ -104,19 +94,21 @@ class _MyHomePageState extends State<HomePage> {
                             backgroundColor: ShimmerEffect.defaultColor,
                             child: IconButton(
                               color: Colors.black,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.play_arrow_rounded,
                               ),
                               iconSize: 75,
+                              // When the channel image is pressed, it navigates to the radio page (audioplayer) and passes some parameters.
+
                               onPressed: () {
                                 final thisUrl = convertedRadioUrl;
-                                print(thisUrl);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => RadioPlayerPage(
                                         radioUrl: thisUrl,
-                                        radioName: radioName),
+                                        radioName: radioName,
+                                        imageUrl: imageUrl),
                                   ),
                                 );
                               },
@@ -145,7 +137,6 @@ class _MyHomePageState extends State<HomePage> {
               },
             ),
           ],
-          fit: StackFit.expand,
         ),
       ),
     );
