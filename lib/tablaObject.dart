@@ -1,11 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class Tablaobject {
   String timetableName;
   String date;
   String time;
-  String slogan;
+  String radioUrl;
   String imageUrl;
 
   final GlobalKey backgroundImagekey = GlobalKey();
@@ -14,7 +13,19 @@ class Tablaobject {
     this.timetableName,
     this.date,
     this.time,
-    this.slogan,
+    this.radioUrl,
     this.imageUrl,
   );
+
+  String? getImage() {
+    return imageUrl;
+  }
+
+  DateTime? geTimeInDateTime() {
+    return DateTime.parse(time);
+  }
+
+  String? getRadioUrl() {
+    return radioUrl;
+  }
 }
