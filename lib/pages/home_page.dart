@@ -47,98 +47,96 @@ class _MyHomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            VxAnimatedBox()
-                .animDuration(const Duration(milliseconds: 450))
-                .size(context.screenWidth, context.screenHeight)
-                .withGradient(LinearGradient(
-                    colors: [_selectedColor, AIColors.primaryColors.first],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight))
-                .make(),
-            AppBar(
-              title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
-                  primaryColor: Vx.purple300, secondaryColor: Colors.white),
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
-            ).h(100).p16(),
-            VxSwiper.builder(
-              itemCount: channelsData.length,
-              aspectRatio: 1.0,
-              enlargeCenterPage: true,
-              onPageChanged: (index) {
-                setState(() {
-                  colorIndex = index % AIColors.primaryColors.length;
-                  _selectedColor = aiColors.getColor(colorIndex);
-                });
-              },
-              itemBuilder: (context, imagesIndex) {
-                final radio = channelsData[imagesIndex];
+        body: Stack(
+      fit: StackFit.expand,
+      children: [
+        VxAnimatedBox()
+            .animDuration(const Duration(milliseconds: 450))
+            .size(context.screenWidth, context.screenHeight)
+            .withGradient(LinearGradient(
+                colors: [_selectedColor, AIColors.primaryColors.first],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight))
+            .make(),
+        AppBar(
+          title: 'Radio Tablå'.text.xl4.bold.white.make().shimmer(
+              primaryColor: Vx.purple300, secondaryColor: Colors.white),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
+        ).h(100).p16(),
+        VxSwiper.builder(
+          itemCount: channelsData.length,
+          aspectRatio: 1.0,
+          enlargeCenterPage: true,
+          onPageChanged: (index) {
+            setState(() {
+              colorIndex = index % AIColors.primaryColors.length;
+              _selectedColor = aiColors.getColor(colorIndex);
+            });
+          },
+          itemBuilder: (context, imagesIndex) {
+            final radio = channelsData[imagesIndex];
 
-                final imageUrl = radio['image'];
-                final radioUrl = radio['liveaudio']['url'];
-                final radioName = radio['name'];
-                final convertedRadioUrl = convertHttpToHttps(radioUrl);
+            final imageUrl = radio['image'];
+            final radioUrl = radio['liveaudio']['url'];
+            final radioName = radio['name'];
+            final convertedRadioUrl = convertHttpToHttps(radioUrl);
 
-                return VxBox(
-                        child: ZStack([
-                  Align(
-                    alignment: Alignment.center,
-                    child: VStack(
-                      [
-                        CircleAvatar(
-                            radius: 50,
-                            backgroundColor: ShimmerEffect.defaultColor,
-                            child: IconButton(
-                              color: Colors.black,
-                              icon: const Icon(
-                                Icons.play_arrow_rounded,
+            return VxBox(
+                    child: ZStack([
+              Align(
+                alignment: Alignment.center,
+                child: VStack(
+                  [
+                    CircleAvatar(
+                        radius: 50,
+                        backgroundColor: ShimmerEffect.defaultColor,
+                        child: IconButton(
+                          color: Colors.black,
+                          icon: const Icon(
+                            Icons.play_arrow_rounded,
+                          ),
+                          iconSize: 75,
+                          // When the channel image is pressed, it navigates to the radio page (audioplayer) and passes some parameters.
+
+                          onPressed: () {
+                            final thisUrl = convertedRadioUrl;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RadioPlayerPage(
+                                    radioUrl: thisUrl,
+                                    radioName: radioName,
+                                    imageUrl: imageUrl),
                               ),
-                              iconSize: 75,
-                              // When the channel image is pressed, it navigates to the radio page (audioplayer) and passes some parameters.
-
-                              onPressed: () {
-                                final thisUrl = convertedRadioUrl;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RadioPlayerPage(
-                                        radioUrl: thisUrl,
-                                        radioName: radioName,
-                                        imageUrl: imageUrl),
-                                  ),
-                                );
-                              },
-                            )),
-                      ],
-                    ),
-                  ),
-                  Align(
-                      alignment: Alignment.center,
-                      child: [
-                        10.heightBox,
-                      ].vStack())
-                ]))
-                    .bgImage(
-                      DecorationImage(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.2), BlendMode.darken)),
-                    )
-                    .border(color: Colors.black, width: 5.0)
-                    .withRounded(value: 60.0)
-                    .make()
-                    .p16()
-                    .centered();
-              },
-            ),
-          ],
+                            );
+                          },
+                        )),
+                  ],
+                ),
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child: [
+                    10.heightBox,
+                  ].vStack())
+            ]))
+                .bgImage(
+                  DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.darken)),
+                )
+                .border(color: Colors.black, width: 5.0)
+                .withRounded(value: 60.0)
+                .make()
+                .p16()
+                .centered();
+          },
         ),
-      ),
-    );
+      ],
+    ));
   }
 }

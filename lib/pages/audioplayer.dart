@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
+import 'package:svt_tabla/pages/home_page.dart';
 import 'package:svt_tabla/tablaObject.dart';
 
 class RadioPlayerPage extends StatefulWidget {
@@ -70,6 +70,19 @@ class _RadioPlayerPageState extends State<RadioPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
