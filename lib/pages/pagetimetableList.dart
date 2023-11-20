@@ -36,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage2> {
             var item = listToShow.first;
 
             dynamic apiDate = item['starttimeutc'];
-            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
-            String formatDate = YearMonthDayhourMinResul[0];
+            List<String> yearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = yearMonthDayhourMinResul[0];
             var parseDate = DateTime.parse(formatDate);
             date = parseDate;
 
@@ -50,15 +50,15 @@ class _MyHomePageState extends State<MyHomePage2> {
           setState(() {
             var item = listToShow.last;
             dynamic apiDate = item['starttimeutc'];
-            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
-            String formatDate = YearMonthDayhourMinResul[0];
+            List<String> yearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = yearMonthDayhourMinResul[0];
             var parseDate = DateTime.parse(formatDate);
             date = parseDate;
-            date = date.add(Duration(days: 1));
+            date = date.add(const Duration(days: 1));
           });
           fetchData();
           print('At the bottom');
-          print(scrollPosition);
+        
         }
       }
     });

@@ -1,11 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-// ignore: file_names
-
 import 'package:flutter/material.dart';
-import 'package:svt_tabla/ai_util.dart';
-
 import 'package:svt_tabla/tablaObject.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ShowTabl extends StatelessWidget {
   //final String formattedDate;
@@ -63,7 +57,7 @@ class ShowTabl extends StatelessWidget {
                 left: 5,
                 top: 3,
                 child: Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
