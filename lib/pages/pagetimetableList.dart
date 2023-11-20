@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:svt_tabla/dateconverter.dart';
 import 'package:svt_tabla/fetch_handler/fetchhandler.dart';
 import 'package:svt_tabla/show_tabl.dart';
 import 'package:svt_tabla/tablaObject.dart';
 
 class MyHomePage2 extends StatefulWidget {
-  const MyHomePage2({super.key});
-
   @override
   State<MyHomePage2> createState() => _MyHomePageState();
 }
@@ -37,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage2> {
             var item = listToShow.first;
 
             dynamic apiDate = item['starttimeutc'];
-            List<String> yearMonthDayhourMinResul = formatApiDate(apiDate);
-            String formatDate = yearMonthDayhourMinResul[0];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
             var parseDate = DateTime.parse(formatDate);
             date = parseDate;
 
@@ -51,14 +50,15 @@ class _MyHomePageState extends State<MyHomePage2> {
           setState(() {
             var item = listToShow.last;
             dynamic apiDate = item['starttimeutc'];
-            List<String> yearMonthDayhourMinResul = formatApiDate(apiDate);
-            String formatDate = yearMonthDayhourMinResul[0];
+            List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+            String formatDate = YearMonthDayhourMinResul[0];
             var parseDate = DateTime.parse(formatDate);
             date = parseDate;
-            date = date.add(const Duration(days: 1));
+            date = date.add(Duration(days: 1));
           });
           fetchData();
           print('At the bottom');
+          print(scrollPosition);
         }
       }
     });
@@ -75,10 +75,12 @@ class _MyHomePageState extends State<MyHomePage2> {
           fetchedData = dataCurrentDate;
           if (isTop) {
             print('isTop');
-
+            print(fetchedData.length);
             fetchedData.addAll(listToShow);
 
             listToShow = fetchedData;
+
+            print(fetchedData.length);
           } else {
             print('not is top');
             listToShow.addAll(fetchedData);
@@ -108,14 +110,15 @@ class _MyHomePageState extends State<MyHomePage2> {
         itemBuilder: (context, index) {
           var item = listToShow[index];
           dynamic apiDate = item['starttimeutc'];
-          List<String> yearMonthDayhourMinResul = formatApiDate(apiDate);
-          String formattedTime = yearMonthDayhourMinResul[1];
-          String formatDate = yearMonthDayhourMinResul[0];
+          List<String> YearMonthDayhourMinResul = formatApiDate(apiDate);
+          String formattedTime = YearMonthDayhourMinResul[1];
+          String formatDate = YearMonthDayhourMinResul[0];
           Tablaobject tablaObject = Tablaobject(
               item['program']['name'],
-              item['description'],
-              formattedTime,
               formatDate,
+              formattedTime,
+              item['program']['name'],
+              item['description'],
               item['imageurltemplate']);
           return ShowTabl(timeTable: tablaObject);
         },

@@ -75,7 +75,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       ),
       body: IndexedStack(
         index: currentIndex,
-        children: [
+        children:  [
           HomePage(), // Add your HomePage widget here
           MyHomePage2(), // Add your MyHomePage2 widget here
         ],

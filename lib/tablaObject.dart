@@ -4,18 +4,13 @@ class Tablaobject {
   String timetableName;
   String date;
   String time;
+  String description;
   String radioUrl;
   String imageUrl;
+  Tablaobject(this.timetableName, this.date, this.time, this.description,
+      this.radioUrl, this.imageUrl);
 
   final GlobalKey backgroundImagekey = GlobalKey();
-
-  Tablaobject(
-    this.timetableName,
-    this.date,
-    this.time,
-    this.radioUrl,
-    this.imageUrl,
-  );
 
   String? getImage() {
     return imageUrl;
